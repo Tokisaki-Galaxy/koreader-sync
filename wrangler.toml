@@ -2,6 +2,9 @@ name = "koreader-sync"
 main = "src/index.ts"
 compatibility_date = "2026-03-25"
 
+[placement]
+mode = "smart"
+
 [vars]
 SESSION_TTL_HOURS = "168"
 

@@ -42,7 +42,10 @@ export interface UserMessages {
   loginSuccess: string;
   tabOverview: string;
   tabReadingStats: string;
-  tabSyncRecords: string;
+  tabDataSync: string;
+  copySuccess: string;
+  heatStreak: string;
+  timeDistribution: string;
   tabCalendar: string;
   sourceStats: string;
   sourceSync: string;

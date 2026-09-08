@@ -15,59 +15,61 @@ export function renderUserPage(locale: Locale): string {
   <title>${m.title}</title>
   <style>
     :root {
-      --bg: #f4f6fa;
+      --bg: #f8fafc;
       --surface: #ffffff;
-      --surface-hover: #fafbfd;
-      --header-bg: #0f1a2e;
-      --text: #1a2332;
-      --text-secondary: #6b7d99;
-      --primary: #3b82f6;
-      --primary-soft: #eff6ff;
-      --primary-hover: #2563eb;
-      --primary-border: #bfdbfe;
-      --accent: #10b981;
+      --surface-hover: #f1f5f9;
+      --header-bg: #0b1120;
+      --text: #0f172a;
+      --text-secondary: #64748b;
+      --primary: #4f46e5;
+      --primary-soft: #eef2ff;
+      --primary-hover: #4338ca;
+      --primary-border: #c7d2fe;
+      --accent: #059669;
       --accent-soft: #ecfdf5;
       --accent-border: #a7f3d0;
-      --danger: #ef4444;
+      --danger: #dc2626;
       --border: #e2e8f0;
-      --shadow-sm: 0 1px 2px 0 rgba(0,0,0,.04);
-      --shadow-md: 0 4px 12px rgba(0,0,0,.06);
-      --shadow-lg: 0 8px 24px rgba(0,0,0,.08);
-      --radius: 10px;
-      --radius-sm: 6px;
+      --border-subtle: rgba(15, 23, 42, 0.06);
+      --shadow-sm: 0 1px 3px rgba(15,23,42,.05);
+      --shadow-md: 0 4px 16px -2px rgba(15,23,42,.08);
+      --shadow-lg: 0 10px 30px -4px rgba(15,23,42,.12);
+      --radius: 12px;
+      --radius-sm: 7px;
       --radius-full: 999px;
-      --transition: .15s ease;
-      --cal-0: #ebedf0;
-      --cal-1: #9be9a8;
-      --cal-2: #40c463;
-      --cal-3: #30a14e;
-      --cal-4: #216e39;
+      --transition: .18s cubic-bezier(0.4, 0, 0.2, 1);
+      --cal-0: #f1f5f9;
+      --cal-1: #c7d2fe;
+      --cal-2: #818cf8;
+      --cal-3: #6366f1;
+      --cal-4: #4338ca;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0f172a;
-        --surface: #1e293b;
-        --surface-hover: #253249;
-        --header-bg: #020617;
-        --text: #f1f5f9;
+        --bg: #0b0f19;
+        --surface: #111827;
+        --surface-hover: #172136;
+        --header-bg: #060911;
+        --text: #f8fafc;
         --text-secondary: #94a3b8;
-        --primary: #60a5fa;
-        --primary-soft: #1e3a5f;
-        --primary-hover: #3b82f6;
-        --primary-border: #3b82f6;
-        --accent: #34d399;
-        --accent-soft: #064e3b;
-        --accent-border: #059669;
+        --primary: #6366f1;
+        --primary-soft: rgba(99, 102, 241, 0.16);
+        --primary-hover: #4f46e5;
+        --primary-border: rgba(99, 102, 241, 0.35);
+        --accent: #10b981;
+        --accent-soft: rgba(16, 185, 129, 0.16);
+        --accent-border: rgba(16, 185, 129, 0.3);
         --danger: #f87171;
-        --border: #334155;
-        --shadow-sm: 0 1px 2px 0 rgba(0,0,0,.2);
-        --shadow-md: 0 4px 12px rgba(0,0,0,.3);
-        --shadow-lg: 0 8px 24px rgba(0,0,0,.4);
-        --cal-0: #1b1f23;
-        --cal-1: #0e4429;
-        --cal-2: #006d32;
-        --cal-3: #26a641;
-        --cal-4: #39d353;
+        --border: #1e293b;
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+        --shadow-md: 0 4px 16px -2px rgba(0,0,0,.45);
+        --shadow-lg: 0 10px 30px -4px rgba(0,0,0,.6);
+        --cal-0: #172136;
+        --cal-1: #1e293b;
+        --cal-2: #3730a3;
+        --cal-3: #4f46e5;
+        --cal-4: #6366f1;
       }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -172,7 +174,98 @@ export function renderUserPage(locale: Locale): string {
     }
     button.secondary:hover { background: var(--surface-hover); color: var(--text); border-color: var(--text-secondary); }
     button.small { padding: 5px 10px; font-size: 12px; }
-    .num { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; }
+    .num { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; font-variant-numeric: tabular-nums; }
+    /* Toast styles */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      min-width: 220px;
+      max-width: 380px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: fadeIn .2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .toast.ok { background: #059669; }
+    .toast.err { background: #dc2626; }
+    .toast.info { background: #4f46e5; }
+    .toast.fade-out { opacity: 0; transform: translateY(-8px); }
+    /* Login wrapper centering */
+    .login-wrapper {
+      min-height: calc(100vh - 120px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow-md);
+    }
+    .login-brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--primary-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      color: var(--primary);
+    }
+    .login-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      color: var(--text);
+    }
+    .login-desc {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 0 0 20px;
+    }
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 11px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .copy-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
     .pill {
       font-size: 11px;
       font-weight: 600;
@@ -247,6 +340,9 @@ export function renderUserPage(locale: Locale): string {
       overflow: hidden;
       box-shadow: var(--shadow-sm);
       transition: box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
     .panel:hover { box-shadow: var(--shadow-md); }
     .panel-head {
@@ -259,6 +355,7 @@ export function renderUserPage(locale: Locale): string {
       background: var(--surface-hover);
       flex-wrap: nowrap;
       min-width: 0;
+      flex: 0 0 auto;
     }
     .panel-head h4 {
       margin: 0;
@@ -271,11 +368,11 @@ export function renderUserPage(locale: Locale): string {
       flex: 1 1 auto;
     }
     .panel-head .pill { flex: 0 0 auto; white-space: nowrap; }
-    .panel-body { padding: 14px; display: grid; gap: 10px; }
+    .panel-body { padding: 14px; display: grid; gap: 10px; flex: 1 1 auto; align-content: start; }
     .kv { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; }
     .kv .key { color: var(--text-secondary); }
     .kv .value { font-weight: 600; }
-    .source-bar { height: 6px; width: 100%; margin: 0; display: block; }
+    .source-bar { height: 6px; width: 100%; margin: 0; margin-top: auto; display: block; flex: 0 0 auto; }
     .source-bar.accent { background: linear-gradient(90deg, var(--accent), #6ee7b7); }
     .source-bar.primary { background: linear-gradient(90deg, var(--primary), #93c5fd); }
     .device-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-top: 12px; }
@@ -543,16 +640,29 @@ export function renderUserPage(locale: Locale): string {
     </div>
   </header>
 
+  <div id="toast-container"></div>
   <div class="container">
-    <section class="card" id="loginCard">
-      <h3 style="margin: 0 0 10px;">${m.loginSection}</h3>
-      <form class="row" id="loginForm" action="javascript:;">
-        <input id="username" placeholder="${m.usernamePlaceholder}" />
-        <input id="password" type="password" placeholder="${m.passwordPlaceholder}" />
-        <button id="loginBtn" type="submit">${m.loginButton}</button>
-      </form>
-      <p id="loginMsg" class="text-secondary" style="margin-top: 8px;"></p>
-    </section>
+    <div class="login-wrapper" id="loginCard">
+      <div class="login-card">
+        <div class="login-brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        </div>
+        <h3 class="login-title">${m.loginSection}</h3>
+        <p class="login-desc">${m.subtitle}</p>
+        <form id="loginForm" action="javascript:;" style="display:flex; flex-direction:column; gap:12px;">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:500; color:var(--text-secondary); margin-bottom:4px;">${m.usernamePlaceholder}</label>
+            <input id="username" placeholder="${m.usernamePlaceholder}" style="width:100%;" required />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:500; color:var(--text-secondary); margin-bottom:4px;">${m.passwordPlaceholder}</label>
+            <input id="password" type="password" placeholder="${m.passwordPlaceholder}" style="width:100%;" required />
+          </div>
+          <button id="loginBtn" type="submit" style="width:100%; margin-top:6px; padding:10px;">${m.loginButton}</button>
+        </form>
+        <p id="loginMsg" class="text-secondary" style="margin-top: 10px; font-size:12px; text-align:center; min-height:16px;"></p>
+      </div>
+    </div>
 
     <section class="card hidden" id="appCard">
       <div class="row row-between" style="margin-bottom: 8px;">
@@ -576,7 +686,7 @@ export function renderUserPage(locale: Locale): string {
         <button class="tab-btn active" data-tab="overview">${m.tabOverview}</button>
         <button class="tab-btn" data-tab="reading">${m.tabReadingStats}</button>
         <button class="tab-btn" data-tab="calendar">${m.tabCalendar}</button>
-        <button class="tab-btn" data-tab="sync">${m.tabSyncRecords}</button>
+        <button class="tab-btn" data-tab="sync">${m.tabDataSync}</button>
       </div>
 
       <section class="tab-panel active" id="tab-overview">
@@ -604,7 +714,7 @@ export function renderUserPage(locale: Locale): string {
             <div class="source-bar primary"></div>
           </article>
         </div>
-        <div style="margin-top: 10px;">
+        <div style="margin-top: 14px;">
           <h4 style="margin: 0 0 8px;">${m.deviceDistributionPrefix}</h4>
           <div id="deviceList" class="device-list"></div>
         </div>
@@ -678,6 +788,21 @@ export function renderUserPage(locale: Locale): string {
             <tbody id="recordsBody"></tbody>
           </table>
         </div>
+
+        <section class="card" id="backupCard" style="margin-top: 20px; border-color: var(--border-subtle); background: var(--surface-hover);">
+          <h3 style="margin: 0 0 6px;">${m.exportTitle}</h3>
+          <p class="text-secondary" style="margin: 0 0 12px;">${m.exportDescription}</p>
+          <div class="row">
+            <button id="exportStatisticsBtn">${m.exportStatisticsButton}</button>
+            <button id="exportProgressBtn" class="secondary">${m.exportProgressButton}</button>
+          </div>
+          <h3 style="margin: 16px 0 6px;">${m.importTitle}</h3>
+          <div class="row">
+            <input id="importFile" type="file" accept=".sqlite3,.sqlite,.db" aria-label="${m.importFileLabel}" style="min-width: 220px; padding: 4px;" />
+            <button id="importBtn">${m.importButton}</button>
+          </div>
+          <p id="backupMsg" class="text-secondary" style="margin-top: 8px;"></p>
+        </section>
       </section>
 
       <section class="tab-panel" id="tab-calendar">
@@ -698,21 +823,6 @@ export function renderUserPage(locale: Locale): string {
           </div>
           <div class="mc-grid" id="mcGrid"></div>
         </div>
-      </section>
-
-      <section class="card" id="backupCard" style="margin-top: 14px;">
-        <h3 style="margin: 0 0 6px;">${m.exportTitle}</h3>
-        <p class="text-secondary" style="margin: 0 0 12px;">${m.exportDescription}</p>
-        <div class="row">
-          <button id="exportStatisticsBtn">${m.exportStatisticsButton}</button>
-          <button id="exportProgressBtn" class="secondary">${m.exportProgressButton}</button>
-        </div>
-        <h3 style="margin: 16px 0 6px;">${m.importTitle}</h3>
-        <div class="row">
-          <input id="importFile" type="file" accept=".sqlite3,.sqlite,.db" aria-label="${m.importFileLabel}" style="min-width: 220px; padding: 4px;" />
-          <button id="importBtn">${m.importButton}</button>
-        </div>
-        <p id="backupMsg" class="text-secondary" style="margin-top: 8px;"></p>
       </section>
     </section>
   </div>
@@ -795,6 +905,32 @@ export function renderUserPage(locale: Locale): string {
       return '<div class="kv"><span class="key">' + escapeHtml(key) + '</span><span class="value num">' + escapeHtml(value) + '</span></div>';
     }
 
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-8px)';
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(I18N.copySuccess || 'Copied', 'success');
+        }).catch(() => {
+          showToast(text, 'info');
+        });
+      } else {
+        showToast(text, 'info');
+      }
+    }
+
     function truncateMiddle(input, left = 8, right = 6) {
       const raw = String(input || '');
       if (raw.length <= left + right + 3) return raw;
@@ -820,6 +956,7 @@ export function renderUserPage(locale: Locale): string {
         .join('');
 
       document.getElementById('overviewStatsSide').innerHTML = [
+        kvRow(I18N.statTotalBooks, Number(reading.totalBooks || 0)),
         kvRow(I18N.statTotalReadPages, Number(reading.totalReadPages || 0)),
         kvRow(I18N.statLastOpen, formatDate(reading.lastOpenAt)),
       ].join('');
@@ -868,16 +1005,18 @@ export function renderUserPage(locale: Locale): string {
         const pages = Number(item.pages || 0);
         const readPages = Number(item.total_read_pages || 0);
         const progress = pages > 0 ? Math.min(100, Math.max(0, (readPages / pages) * 100)) : 0;
+        const rawMd5 = String(item.md5 || '');
         const tr = document.createElement('tr');
         tr.innerHTML =
-          '<td>' + escapeHtml(item.title) + '</td>' +
-          '<td>' + escapeHtml(item.authors) + '</td>' +
-          '<td><span class="truncate num" title="' + escapeHtml(item.md5) + '">' + escapeHtml(truncateMiddle(item.md5, 10, 8)) + '</span></td>' +
+          '<td><strong>' + escapeHtml(item.title) + '</strong></td>' +
+          '<td>' + escapeHtml(item.authors || '-') + '</td>' +
+          '<td><span class="truncate num copy-click" data-copy="' + escapeHtml(rawMd5) + '" title="' + escapeHtml(rawMd5) + ' (Click to copy)">' + escapeHtml(truncateMiddle(rawMd5, 8, 6)) + ' 📋</span></td>' +
           '<td class="num">' + escapeHtml(pages) + '</td>' +
           '<td>' + escapeHtml(formatDuration(item.total_read_time)) + '</td>' +
           '<td class="read-pages">' +
-            '<span class="num">' + escapeHtml(readPages) + '</span>' +
+            '<span class="num" style="min-width:32px;">' + escapeHtml(readPages) + '</span>' +
             '<div class="bar"><span style="width:' + escapeHtml(progress.toFixed(2)) + '%"></span></div>' +
+            '<span style="font-size:11px;color:var(--text-tertiary);min-width:38px;text-align:right;">' + escapeHtml(progress.toFixed(0)) + '%</span>' +
           '</td>' +
           '<td>' + escapeHtml(formatDate(item.last_open)) + '</td>';
         body.appendChild(tr);
@@ -892,12 +1031,14 @@ export function renderUserPage(locale: Locale): string {
       tbody.innerHTML = '';
       for (const item of items || []) {
         const progressText = formatPercent(item.percentage);
+        const rawDoc = String(item.document || '');
+        const rawDevId = String(item.device_id || '');
         const tr = document.createElement('tr');
         tr.innerHTML =
-          '<td><span class="truncate num" title="' + escapeHtml(item.document) + '">' + escapeHtml(item.document) + '</span></td>' +
+          '<td><span class="truncate num copy-click" data-copy="' + escapeHtml(rawDoc) + '" title="' + escapeHtml(rawDoc) + ' (Click to copy)">' + escapeHtml(truncateMiddle(rawDoc, 10, 8)) + ' 📋</span></td>' +
           '<td><span class="chip-progress">' + escapeHtml(progressText) + '</span></td>' +
           '<td><span class="pill device">' + escapeHtml(item.device || I18N.noData) + '</span></td>' +
-          '<td><span class="truncate num" title="' + escapeHtml(item.device_id) + '">' + escapeHtml(truncateMiddle(item.device_id, 10, 8)) + '</span></td>' +
+          '<td><span class="truncate num copy-click" data-copy="' + escapeHtml(rawDevId) + '" title="' + escapeHtml(rawDevId) + '">' + escapeHtml(truncateMiddle(rawDevId, 8, 6)) + '</span></td>' +
           '<td>' + escapeHtml(formatDate(item.timestamp)) + '</td>';
         tbody.appendChild(tr);
       }
@@ -1243,7 +1384,7 @@ export function renderUserPage(locale: Locale): string {
             var ht = hourTotals[h];
             var level = ht === 0 ? 0 : Math.min(5, Math.ceil((ht / maxHour) * 5));
             var barH = ht === 0 ? 0 : Math.max(2, (ht / maxHour) * 18);
-            hHtml += '<div class="mc-hour-bar h' + level + '" style="height:' + barH.toFixed(1) + 'px"></div>';
+            hHtml += '<div class="mc-hour-bar h' + level + '" style="height:' + barH.toFixed(1) + 'px" title="' + String(h).padStart(2, '0') + ':00 - ' + ht + ' min"></div>';
           }
           hourArea.innerHTML = hHtml;
         }
@@ -1403,6 +1544,14 @@ export function renderUserPage(locale: Locale): string {
       monthResizeTimer = setTimeout(function() {
         renderMonthCalendar(lastMonthData.data, lastMonthData.year, lastMonthData.month);
       }, 150);
+    });
+
+    document.addEventListener('click', (e) => {
+      const copyTarget = e.target.closest('.copy-click');
+      if (copyTarget) {
+        const text = copyTarget.dataset.copy || copyTarget.getAttribute('data-copy');
+        if (text) copyToClipboard(text);
+      }
     });
 
     document.getElementById('loadRecordsBtn').addEventListener('click', async () => {
